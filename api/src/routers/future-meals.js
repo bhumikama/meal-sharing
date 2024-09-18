@@ -1,17 +1,16 @@
 import express from "express";
-import knex from "../database_client.js";
+import { getMealsByDateComparison } from "../utils/MealUtils.js";
 
 const futureMealsRouter = express.Router();
 
-
-futureMealsRouter.get('/', async (req, res) => {
-    try {
-        const now = new Date();
-        const future_meals =  await knex('Meal').select('*').where('when', '>', now);
-        res.json(future_meals);
-    } catch (err) {
-      res.status(500).json({ error: err.message });
-    }
+futureMealsRouter.get("/", async (req, res, next) => {
+  try {
+    const operator = ">";
+    const future_meals = await getMealsByDateComparison(operator);
+    res.json(future_meals);
+  } catch (err) {
+    next(err);
+  }
 });
 
 export default futureMealsRouter;
