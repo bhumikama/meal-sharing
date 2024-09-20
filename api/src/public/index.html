@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meal Sharing App</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <div class="col-md-8 mx-auto mt-5">
+        <div class="card shadow-sm">
+          <div class="card-header text-center bg-primary text-white">
+            <h1 class="my-3">Welcome to Meal Sharing API</h1>
+          </div>
+          <div class="card-body">
+            <p class="lead text-center">
+              This API provides routes to view meal information
+            </p>
+            <ul class="list-group">
+              <li class="list-group-item">
+                <strong>/api/future-meals</strong>: Meals scheduled for the
+                future.
+                <ul id="future-meals" class="list-group mt-2"></ul>
+              </li>
+              <li class="list-group-item past-meals">
+                <strong>/api/past-meals</strong>: Meals that have already
+                occurred.
+                <ul id="past-meals" class="list-group mt-2"></ul>
+              </li>
+              <li class="list-group-item">
+                <strong>/api/all-meals</strong>: Get all meals that are sorted
+                by ID.
+                <ul id="all-meals" class="list-group mt-2"></ul>
+              </li>
+              <li class="list-group-item">
+                <strong>/api/first-meal</strong>: Get the meal with the smallest
+                ID.
+                <ul id="first-meal" class="list-group mt-2"></ul>
+              </li>
+              <li class="list-group-item">
+                <strong>/api/last-meal</strong>: Get the meal with the largest
+                ID.
+                <ul id="last-meal" class="list-group mt-2"></ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
