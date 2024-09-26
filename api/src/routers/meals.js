@@ -6,7 +6,7 @@ const mealsRouter = express.Router();
 //return all meals
 mealsRouter.get("/", async (req, res, next) => {
   try {
-    const meals = await knex("Meal").select("*");
+    const meals = await knex("Meal");
     res.json(meals);
   } catch (error) {
     next(error);
@@ -29,9 +29,9 @@ mealsRouter.post("/", async (req, res, next) => {
 mealsRouter.get("/:id", async (req, res, next) => {
   try {
     const id = req.params.id;
-    const meal = await knex("Meal").select("*").where("id", id);
+    const meal = await knex("Meal").where("id", id).first();
     if (!meal) {
-      res.status(404).json({ message: "Meal not found" });
+      res.json({ message: "Meal not found" });
     } else {
       res.json(meal);
     }

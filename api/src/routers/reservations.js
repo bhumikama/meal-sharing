@@ -6,7 +6,7 @@ const reservationRouter = express.Router();
 //Returns all reservations
 reservationRouter.get("/", async (req, res, next) => {
     try {
-        const reservation = await knex("Reservation").select("*");
+        const reservation = await knex("Reservation");
         res.json(reservation);
     } catch (error) {
         next(error);
@@ -29,9 +29,9 @@ reservationRouter.post("/", async (req, res, next) => {
 reservationRouter.get("/:id", async (req, res, next) => {
     try {
         const id = req.params.id;
-        const reservation = await knex("Reservation").select('*').where('id',id);
+        const reservation = await knex("Reservation").where('id',id).first();
         if (!reservation) {
-            res.status(404).json({ message: 'Reservation not found' });
+            res.json({ message: 'Reservation not found' });
           } else {
             res.json(reservation);
           }
