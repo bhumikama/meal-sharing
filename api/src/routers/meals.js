@@ -104,6 +104,21 @@ mealsRouter.get("/:id", async (req, res, next) => {
   }
 });
 
+// GET api/meals/:meal_id/reviews
+mealsRouter.get("/:meal_id/reviews", async (req, res, next) => {
+  try {
+    const id = req.params.meal_id;
+    const reviewsForMeal = await knex("review").where("meal_id", id);
+    if (reviewsForMeal.length == 0) {
+      res.json({ message: "Meal not found" });
+    } else {
+      res.json(reviewsForMeal);
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
 //Updates the meal by id
 mealsRouter.put("/:id", async (req, res, next) => {
   try {
