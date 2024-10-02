@@ -12,6 +12,7 @@ import futureMealsRouter from "./routers/future-meals.js";
 import pastMealsRouter from "./routers/past-meals.js";
 import mealsRouter from "./routers/meals.js";
 import reservationRouter from "./routers/reservations.js";
+import reviewRouter from "./routers/review.js";
 
 const app = express();
 app.use(cors());
@@ -33,6 +34,7 @@ apiRouter.use("/first-meal", firstMealRouter);
 apiRouter.use("/last-meal", lastMealRouter);
 apiRouter.use("/meals", mealsRouter);
 apiRouter.use("/reservations", reservationRouter);
+apiRouter.use("/reviews", reviewRouter);
 
 app.use("/api", apiRouter);
 
