@@ -6,7 +6,7 @@ const mealsRouter = express.Router();
 //return all meals
 mealsRouter.get("/", async (req, res, next) => {
   try {
-    const query = knex("Meal");
+    const query = knex("meal");
     const {
       maxPrice,
       availableReservations,
@@ -24,26 +24,21 @@ mealsRouter.get("/", async (req, res, next) => {
     console.log(`datebefore = ${dateBefore}`);
     console.log(`availableReservation = ${availableReservations}`);
 
-    if (maxPrice !== undefined) {
+    if (!isNaN(maxPrice)) {
       query.where("price", "<", maxPrice);
     }
     if (availableReservations !== undefined) {
-      if (availableReservations === "true") {
-        //might be returned as a string, hence checking explicitly
-        query
-          .leftJoin("Reservation", "Meal.id", "=", "Reservation.meal_id")
-          .select("Meal.id", "Meal.max_reservations", "Meal.title")
-          .sum("Reservation.number_of_guests as sum_of_guests")
-          .groupBy("Meal.id", "Meal.max_reservations", "Meal.title")
-          .having("sum_of_guests", "<", knex.ref("Meal.max_reservations")); //to make it refer to a column and not consider as a string using knex.ref() here
-      } else {
-        query
-          .leftJoin("Reservation", "Meal.id", "=", "Reservation.meal_id")
-          .select("Meal.id", "Meal.max_reservations", "Meal.title")
-          .sum("Reservation.number_of_guests as sum_of_guests")
-          .groupBy("Meal.id", "Meal.max_reservations", "Meal.title")
-          .having("sum_of_guests", ">=", knex.ref("Meal.max_reservations"));
-      }
+      //might be returned as a string, hence checking explicitly
+      query
+        .leftJoin("reservation", "meal.id", "=", "reservation.meal_id")
+        .select("meal.id", "meal.max_reservations", "meal.title")
+        .sum("reservation.number_of_guests as sum_of_guests")
+        .groupBy("meal.id", "meal.max_reservations", "meal.title")
+        .havingRaw(
+          availableReservations === "true"
+            ? "SUM(reservation.number_of_guests) < meal.max_reservations"
+            : "SUM(reservation.number_of_guests) >= meal.max_reservations"
+        ); //to make it refer to a column and not consider as a string using knex.ref() here
     }
 
     if (title !== undefined) {
@@ -82,7 +77,7 @@ mealsRouter.post("/", async (req, res, next) => {
   try {
     console.log(req.body);
     const data = req.body;
-    await knex("Meal").insert(data);
+    await knex("meal").insert(data);
     res.status(200).json({ message: "created successfully" });
   } catch (error) {
     next(error);
@@ -93,7 +88,7 @@ mealsRouter.post("/", async (req, res, next) => {
 mealsRouter.get("/:id", async (req, res, next) => {
   try {
     const id = req.params.id;
-    const meal = await knex("Meal").where("id", id).first();
+    const meal = await knex("meal").where("id", id).first();
     if (!meal) {
       res.json({ message: "Meal not found" });
     } else {
@@ -124,7 +119,7 @@ mealsRouter.put("/:id", async (req, res, next) => {
   try {
     const id = req.params.id;
     const updatedMeal = req.body;
-    const meal = await knex("Meal").where("id", id).update(updatedMeal);
+    const meal = await knex("meal").where("id", id).update(updatedMeal);
 
     if (meal) {
       res.status(200).json({ message: "Meal updated successfully" });
@@ -140,7 +135,7 @@ mealsRouter.put("/:id", async (req, res, next) => {
 mealsRouter.delete("/:id", async (req, res, next) => {
   try {
     const id = req.params.id;
-    const deletedMeal = await knex("Meal").where("id", id).del();
+    const deletedMeal = await knex("meal").where("id", id).del();
     if (deletedMeal) {
       res.status(200).json({ message: "deleted successfully" });
     } else {
