@@ -17,17 +17,11 @@ mealsRouter.get("/", async (req, res, next) => {
       sortKey,
       sortDir,
     } = req.query;
-    console.log(`maxPrice = ${maxPrice}`);
-    console.log(`title = ${title}`);
-    console.log(`limit = ${limit}`);
-    console.log(`dateafter = ${dateAfter}`);
-    console.log(`datebefore = ${dateBefore}`);
-    console.log(`availableReservation = ${availableReservations}`);
 
     if (!isNaN(maxPrice)) {
       query.where("price", "<", maxPrice);
     }
-    if (availableReservations !== undefined) {
+    if (!isNaN(availableReservations)) {
       //might be returned as a string, hence checking explicitly
       query
         .leftJoin("reservation", "meal.id", "=", "reservation.meal_id")
@@ -75,7 +69,6 @@ mealsRouter.get("/", async (req, res, next) => {
 //insert meal
 mealsRouter.post("/", async (req, res, next) => {
   try {
-    console.log(req.body);
     const data = req.body;
     await knex("meal").insert(data);
     res.status(200).json({ message: "created successfully" });
@@ -87,8 +80,8 @@ mealsRouter.post("/", async (req, res, next) => {
 //GET meals by id
 mealsRouter.get("/:id", async (req, res, next) => {
   try {
-    const id = req.params.id;
-    const meal = await knex("meal").where("id", id).first();
+    const { id } = req.params;
+    const meal = await knex("meal").where({ id }).first();
     if (!meal) {
       res.json({ message: "Meal not found" });
     } else {
@@ -117,9 +110,9 @@ mealsRouter.get("/:meal_id/reviews", async (req, res, next) => {
 //Updates the meal by id
 mealsRouter.put("/:id", async (req, res, next) => {
   try {
-    const id = req.params.id;
+    const { id } = req.params;
     const updatedMeal = req.body;
-    const meal = await knex("meal").where("id", id).update(updatedMeal);
+    const meal = await knex("meal").where({ id }).update(updatedMeal);
 
     if (meal) {
       res.status(200).json({ message: "Meal updated successfully" });
@@ -134,8 +127,8 @@ mealsRouter.put("/:id", async (req, res, next) => {
 //Deletes the meal by id
 mealsRouter.delete("/:id", async (req, res, next) => {
   try {
-    const id = req.params.id;
-    const deletedMeal = await knex("meal").where("id", id).del();
+    const { id } = req.params;
+    const deletedMeal = await knex("meal").where({ id }).del();
     if (deletedMeal) {
       res.status(200).json({ message: "deleted successfully" });
     } else {
