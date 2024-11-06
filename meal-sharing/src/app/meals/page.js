@@ -5,7 +5,7 @@ async function fetchMeals() {
     const data = await apiResponse.json();
     return data;
   } catch (error) {
-    throw new Error(error);
+    console.error("Error fetching data:", error);
   }
 }
 
