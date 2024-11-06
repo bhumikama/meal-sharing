@@ -1,0 +1,116 @@
+.collectionProducts {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 85px 0;
+  padding: 0 160px;
+  gap: 40px;
+}
+
+.collectionProducts h2 {
+  text-transform: uppercase;
+  font-size: 35px;
+  font-weight: 500;
+}
+
+.collectionProducts h2 span {
+  font-weight: 700;
+}
+
+/* Grid layout for displaying products in 4 columns */
+.mainContainer {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 30px;
+}
+
+.productContainer {
+  position: relative;
+}
+
+.productImageDiv {
+  position: relative;
+  width: 258px;
+  height: 320px;
+  overflow: hidden;
+  transition: 0.3s linear;
+}
+
+.productImageDiv img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  object-fit: cover;
+}
+
+.productImageDiv .front_image {
+  z-index: 2;
+  transition: opacity 0.3s linear;
+  cursor: pointer;
+}
+
+.productInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.productName {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* Remove text decoration */
+.productName a {
+  text-decoration: none;
+  color: black;
+}
+
+.productName h5 {
+  font-weight: 400;
+  font-size: 16px;
+  text-align: left;
+}
+
+/* Media queries to make the layout responsive */
+
+@media screen and (max-width: 1210px) {
+  .collectionProducts {
+    padding: 0 60px;
+  }
+
+  .collectionProducts h2 {
+    font-size: 26px;
+  }
+
+  .productImageDiv {
+    width: 100%;
+    height: 250px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .mainContainer {
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 20px;
+  }
+
+  .productImageDiv {
+    width: 100%;
+    height: 240px;
+  }
+}
+
+/* Adjust grid layout and product image size for mobile phones */
+@media screen and (max-width: 450px) {
+  .collectionProducts {
+    padding: 0 15px;
+  }
+
+  .mainContainer {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

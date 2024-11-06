@@ -168,6 +168,7 @@ AggregateError [ECONNREFUSED]:
 ```
 
 ### Broken TypeScript config file
+
 This boilerplate does not use TypeScript, but Vite which is used in the `app` package has built in support for TypeScript.
 This means that Vite (or rather `esbuild` which is used internally) will look for a TypScript config file (`tsconfig.json`) in the current folder and all parent folders until it finds one.
 If it does find a TypeScript config file but that file is invalid or empty you'll see errors like this:
@@ -176,7 +177,7 @@ If it does find a TypeScript config file but that file is invalid or empty you'l
 ✘ [ERROR] Unexpected end of file in JSON
 
     ../../tsconfig.json:1:0:
-      1 │ 
+      1 │
         ╵ ^
 
 failed to load config from /Users/milton/dev/hyf/hyf-project-template/app/vite.config.js
@@ -196,6 +197,7 @@ Error: Build failed with 1 error:
 ```
 
 There are 3 possible solutions:
+
 1. Delete the offending TypeScript config file
 2. Fix the issue in the file so that Vite can use it
 3. Move your project folder to some place that doesn't put the TypeScript config file in the parent folder of your project folder
