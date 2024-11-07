@@ -6,10 +6,14 @@ async function fetchMeals() {
     return data;
   } catch (error) {
     console.error("Error fetching data:", error);
+    return null;
   }
 }
 
 export default async function Recipes() {
   const mealList = await fetchMeals();
+  if (!mealList) {
+    return <div>Error loading meals. Please try again later.</div>;
+  }
   return <MealList mealsList={mealList} />;
 }

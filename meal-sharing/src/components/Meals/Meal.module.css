@@ -17,10 +17,85 @@
   font-weight: 700;
 }
 
+.card {
+  position: relative;
+  height: auto;
+  overflow: hidden;
+  box-shadow: 0 0 10px #ede9e9;
+  border-radius: 8px;
+  padding: 20px;
+}
+.cardImg {
+  position: relative;
+  width: 100%;
+  height: 190px;
+  overflow: hidden;
+  border-radius: 5px;
+}
+.cardImg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 5px;
+  transition: 0.3s ease;
+}
+.card:hover .cardImg img {
+  transform: scale(1.1);
+}
+.cardImg span {
+  position: absolute;
+  top: 2%;
+  left: 2%;
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 5px;
+}
+.cardImg span:hover {
+  color: orange;
+}
+.cardInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  margin-top: 10px;
+  gap: 15px;
+  padding: 5px;
+}
+.cardInfo h2 {
+  font-size: 20px;
+  color: #222;
+  text-align: center;
+  text-transform: capitalize;
+}
+.cardInfo ul {
+  gap: 12px;
+}
+.cardInfo ul li {
+  font-size: 12px;
+  cursor: pointer;
+}
+.cardButton {
+  position: relative;
+  background-color: #85b72c;
+  width: 100%;
+  text-align: center;
+  padding: 10px;
+  border-radius: 8px;
+  color: #fff;
+  font-weight: 400;
+  transition: 0.3s ease;
+  overflow: hidden;
+  z-index: 1;
+}
+.starRating {
+  display: flex;
+}
+
 /* Grid layout for displaying products in 4 columns */
 .mainContainer {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   grid-gap: 30px;
 }
 

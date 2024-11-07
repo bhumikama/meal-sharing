@@ -14,6 +14,7 @@ function MealList({ mealsList }) {
           {mealsList.map((meal, index) => (
             <MealCard
               key={`meal-${index}`}
+              mealId={meal.id}
               title={meal.title}
               imgUrl={meal.image_url}
               location={meal.location}
