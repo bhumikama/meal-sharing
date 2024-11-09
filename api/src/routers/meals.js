@@ -78,15 +78,54 @@ mealsRouter.post("/", async (req, res, next) => {
 });
 
 //GET meals by id
+// mealsRouter.get("/:id", async (req, res, next) => {
+//   try {
+//     const { id } = req.params;
+//     const meal = await knex("meal").where({ id }).first();
+//     if (!meal) {
+//       res.json({ message: "Meal not found" });
+//     } else {
+//       res.json(meal);
+//     }
+//   } catch (error) {
+//     next(error);
+//   }
+// });
+
 mealsRouter.get("/:id", async (req, res, next) => {
   try {
     const { id } = req.params;
-    const meal = await knex("meal").where({ id }).first();
-    if (!meal) {
-      res.json({ message: "Meal not found" });
-    } else {
-      res.json(meal);
+
+    // Query to get meal details along with current and available reservations
+    const meal = await knex("meal")
+      .leftJoin("reservation", "meal.id", "reservation.meal_id") // Left join to get reservation data
+      .select(
+        "meal.id",
+        "meal.title",
+        "meal.description",
+        "meal.location",
+        "meal.when",
+        "meal.max_reservations",
+        "meal.price",
+        "meal.created_date",
+        "meal.image_url",
+        knex.sum("reservation.number_of_guests").as("current_reservations") // Sum of reservations
+      )
+      .where("meal.id", id)
+      .groupBy("meal.id") // Grouping by meal to aggregate the reservations
+      .first();
+
+    // Calculate available reservations
+    if (meal) {
+      meal.available_reservations =
+        meal.max_reservations - (meal.current_reservations || 0);
     }
+
+    if (!meal) {
+      return res.status(404).json({ message: "Meal not found" });
+    }
+
+    res.json(meal); // Send the meal with available and current reservations
   } catch (error) {
     next(error);
   }
