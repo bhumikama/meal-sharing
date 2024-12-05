@@ -2,7 +2,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import Navbar from "@/components/Header/Navbar";
-import Footer from "@/components/Footer/footer";
+import Footer from "@/components/Footer/Footer";
 import { MealProvider } from "./context/MealContext";
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
