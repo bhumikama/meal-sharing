@@ -29,7 +29,7 @@ const ModalForm = ({ open, onClose, mealId, refetchMealInfo }) => {
     if (!open) return;
     try {
       // Send reservation data to the backend API
-      const response = await fetch("http://localhost:3001/api/reservations/", {
+      const response = await fetch("https://meal-sharing-backend-huuy.onrender.com/api/reservations/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
