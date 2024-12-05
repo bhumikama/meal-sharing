@@ -1,7 +1,7 @@
 export const fetchMeals = async (queryString) => {
   console.log("Query String:", queryString);
   const response = await fetch(
-    `http://localhost:3001/api/meals?${queryString}`
+    `https://meal-sharing-backend-huuy.onrender.com/api/meals?${queryString}`
   );
   if (!response.ok) {
     console.error("Failed to fetch meals:", response.statusText);
@@ -12,7 +12,7 @@ export const fetchMeals = async (queryString) => {
 };
 
 export const fetchReviews = async (mealId) => {
-  const response = await fetch(`http://localhost:3001/api/reviews/`);
+  const response = await fetch(`https://meal-sharing-backend-huuy.onrender.com/api/reviews/`);
 
   if (!response.ok) {
     console.error("ailed to fetch reviews :", response.statusText);
