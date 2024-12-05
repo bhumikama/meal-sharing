@@ -1,6 +1,7 @@
 import express from "express";
 import knex from "../database_client.js";
-
+import { addReservationSchema } from "../validate/validator.js";
+import { validateSchema } from "../validate/validator.js";
 const reservationRouter = express.Router();
 
 //Returns all reservations
@@ -14,36 +15,42 @@ reservationRouter.get("/", async (req, res, next) => {
 });
 
 //Adds a new reservation to the database
-reservationRouter.post("/", async (req, res, next) => {
-  try {
-    console.log(req.body);
-    const {
-      number_of_guests,
-      meal_id,
-      contact_name,
-      contact_email,
-      contact_phonenumber,
-    } = req.body;
+reservationRouter.post(
+  "/",
+  validateSchema(addReservationSchema),
+  async (req, res, next) => {
+    try {
+      console.log(req.body);
+      const {
+        number_of_guests,
+        meal_id,
+        contact_name,
+        contact_email,
+        contact_phonenumber,
+      } = req.value.body;
 
-    // validation for required fields
-    if (!number_of_guests || !meal_id || !contact_name || !contact_email) {
-      return res.status(400).json({ message: "Missing required fields" });
+      console.log("add new reservation:", req.value.body);
+
+      // validation for required fields
+      if (!number_of_guests || !meal_id || !contact_name || !contact_email) {
+        return res.status(400).json({ message: "Missing required fields" });
+      }
+      await knex("reservation").insert({
+        meal_id,
+        number_of_guests,
+        contact_name,
+        contact_email,
+        contact_phonenumber,
+        created_date: new Date(),
+      });
+
+      res.status(200).json({ message: "Reservation added successfully!" });
+    } catch (error) {
+      console.error("Error adding reservation:", error);
+      next(error);
     }
-    await knex("reservation").insert({
-      meal_id,
-      number_of_guests,
-      contact_name,
-      contact_email,
-      contact_phonenumber,
-      created_date: new Date(),
-    });
-
-    res.status(200).json({ message: "Reservation added successfully!" });
-  } catch (error) {
-    console.error("Error adding reservation:", error);
-    next(error);
   }
-});
+);
 
 //GET reservations by id
 reservationRouter.get("/:id", async (req, res, next) => {

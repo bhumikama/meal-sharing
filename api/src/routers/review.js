@@ -1,6 +1,7 @@
 import express from "express";
 import knex from "../database_client.js";
-
+import { validateSchema } from "../validate/validator.js";
+import { addReviewSchema } from "../validate/validator.js";
 const reviewRouter = express.Router();
 
 //Returns all Reviews
@@ -14,29 +15,32 @@ reviewRouter.get("/", async (req, res, next) => {
 });
 
 //Adds a new Review to the database
-reviewRouter.post("/", async (req, res, next) => {
-  try {
-    console.log(req.body);
-    const { meal_id, title, description, stars } = req.body;
+reviewRouter.post(
+  "/",
+  validateSchema(addReviewSchema),
+  async (req, res, next) => {
+    try {
+      const { meal_id, title, description, stars } = req.value.body;
+      console.log(req.value.body);
+      // validation for required fields
+      if (!meal_id || !title || !stars) {
+        return res.status(400).json({ message: "Missing required fields" });
+      }
+      await knex("review").insert({
+        meal_id,
+        title,
+        description,
+        stars,
+        created_date: new Date(),
+      });
 
-    // validation for required fields
-    if (!meal_id || !title || !description || !stars) {
-      return res.status(400).json({ message: "Missing required fields" });
+      res.status(200).json({ message: "Review added successfully!" });
+    } catch (error) {
+      console.error("Error adding reservation:", error);
+      next(error);
     }
-    await knex("review").insert({
-      meal_id,
-      title,
-      description,
-      stars,
-      created_date: new Date(),
-    });
-
-    res.status(200).json({ message: "Review added successfully!" });
-  } catch (error) {
-    console.error("Error adding reservation:", error);
-    next(error);
   }
-});
+);
 
 //GET Reviews by id
 reviewRouter.get("/:id", async (req, res, next) => {

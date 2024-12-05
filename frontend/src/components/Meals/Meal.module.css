@@ -1,0 +1,242 @@
+.collectionProducts {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 85px 0;
+  padding: 0 160px;
+  gap: 40px;
+}
+
+.collectionProducts h2 {
+  text-transform: uppercase;
+  font-size: 35px;
+  font-weight: 500;
+}
+
+.collectionProducts h2 span {
+  font-weight: 700;
+}
+
+.card {
+  position: relative;
+  height: auto;
+  overflow: hidden;
+  box-shadow: 0 0 10px #ede9e9;
+  border-radius: 8px;
+  padding: 20px;
+  border: 1px solid #e5e5e5;
+}
+.cardImg {
+  position: relative;
+  width: 100%;
+  height: 190px;
+  overflow: hidden;
+  border-radius: 5px;
+}
+.cardImg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 5px;
+  transition: 0.3s ease;
+}
+.card:hover {
+  transform: scale(1.1);
+}
+.cardImg span {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 5px;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  color: white;
+}
+.cardImg span:hover {
+  color: orange;
+}
+.cardInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  margin-top: 10px;
+  gap: 15px;
+  padding: 5px;
+}
+.cardInfo h2 {
+  font-size: 20px;
+  color: #222;
+  text-align: center;
+  text-transform: capitalize;
+}
+
+.infoRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  margin: 2px 0;
+  width: 100%;
+}
+
+.price {
+  font-weight: bold;
+  color: #29ade5;
+}
+
+.location {
+  display: flex;
+  align-items: center;
+  color: #555;
+}
+
+.cardButton {
+  position: relative;
+  background-color: #85b72c;
+  width: 100%;
+  text-align: center;
+  padding: 10px;
+  border-radius: 8px;
+  color: #fff;
+  font-weight: 400;
+  transition: 0.3s ease;
+  overflow: hidden;
+  z-index: 1;
+}
+.starRating {
+  display: flex;
+  gap: 3px;
+}
+.starRating span {
+  font-size: 0.8rem;
+}
+
+/* Grid layout for displaying products in 4 columns */
+.mainContainer {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 30px;
+}
+
+.productContainer {
+  position: relative;
+}
+
+.productImageDiv {
+  position: relative;
+  width: 258px;
+  height: 320px;
+  overflow: hidden;
+  transition: 0.3s linear;
+}
+
+.productImageDiv img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  object-fit: cover;
+}
+
+.line-clamp-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.productImageDiv .front_image {
+  z-index: 2;
+  transition: opacity 0.3s linear;
+  cursor: pointer;
+}
+
+.productInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.productName {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.productName a {
+  text-decoration: none;
+  color: black;
+}
+
+.productName h5 {
+  font-weight: 400;
+  font-size: 16px;
+  text-align: left;
+}
+
+.spotsBanner {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: #29ade5;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 5px 10px;
+  border-radius: 3px;
+  z-index: 1;
+  text-transform: uppercase;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.spotsBanner[style*="background-color: red"] {
+  background-color: red; /* Ensures the fully booked banner is in red */
+}
+
+/* Media queries to make the layout responsive */
+@media screen and (max-width: 1210px) {
+  .collectionProducts {
+    padding: 0 60px;
+  }
+
+  .collectionProducts h2 {
+    font-size: 26px;
+  }
+
+  .productImageDiv {
+    width: 100%;
+    height: 250px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .mainContainer {
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 20px;
+  }
+
+  .productImageDiv {
+    width: 100%;
+    height: 240px;
+  }
+  .spotsBanner {
+    font-size: 10px;
+    padding: 4px 8px;
+  }
+}
+
+/* Adjust grid layout and product image size for mobile phones */
+@media screen and (max-width: 450px) {
+  .collectionProducts {
+    padding: 0 15px;
+  }
+  .mainContainer {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .spotsBanner {
+    font-size: 8px;
+    padding: 3px 6px;
+  }
+}

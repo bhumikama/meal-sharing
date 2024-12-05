@@ -4,63 +4,159 @@ import knex from "../database_client.js";
 const mealsRouter = express.Router();
 
 //return all meals
+// mealsRouter.get("/", async (req, res, next) => {
+//   try {
+//     const query = knex("meal");
+//     const {
+//       maxPrice,
+//       availableReservations,
+//       title,
+//       dateAfter,
+//       dateBefore,
+//       limit,
+//       sortKey,
+//       sortDir,
+//     } = req.query;
+
+//     if (!isNaN(maxPrice)) {
+//       query.where("price", "<", maxPrice);
+//     }
+//     if (!isNaN(availableReservations)) {
+//       //might be returned as a string, hence checking explicitly
+//       query
+//         .leftJoin("reservation", "meal.id", "=", "reservation.meal_id")
+//         .select("meal.id", "meal.max_reservations", "meal.title")
+//         .sum("reservation.number_of_guests as sum_of_guests")
+//         .groupBy("meal.id", "meal.max_reservations", "meal.title")
+//         .havingRaw(
+//           availableReservations === "true"
+//             ? "SUM(reservation.number_of_guests) < meal.max_reservations"
+//             : "SUM(reservation.number_of_guests) >= meal.max_reservations"
+//         ); //to make it refer to a column and not consider as a string using knex.ref() here
+//     }
+
+//     if (title !== undefined) {
+//       query.where("title", "like", `%${title}%`); //performing a partial match here
+//     }
+//     if (dateAfter !== undefined) {
+//       query.where("when", ">", dateAfter);
+//     }
+//     if (dateBefore !== undefined) {
+//       query.where("when", "<", dateBefore);
+//     }
+//     if (limit !== undefined) {
+//       query.limit(limit);
+//     }
+//     if (sortKey !== undefined) {
+//       if (sortKey == "price") {
+//         query.orderBy("price", sortDir !== undefined ? sortDir : "asc");
+//       }
+//       if (sortKey == "max_reservations") {
+//         query.orderBy(
+//           "max_reservations",
+//           sortDir !== undefined ? sortDir : "asc"
+//         );
+//       }
+//     }
+
+//     const meals = await query;
+//     res.json(meals);
+//   } catch (error) {
+//     next(error);
+//   }
+// });
+
 mealsRouter.get("/", async (req, res, next) => {
   try {
-    const query = knex("meal");
-    const {
-      maxPrice,
-      availableReservations,
-      title,
-      dateAfter,
-      dateBefore,
-      limit,
-      sortKey,
-      sortDir,
-    } = req.query;
+    // let query = knex("meal")
+    //   .select(
+    //     "meal.*",
+    //     knex.raw(
+    //       "(meal.max_reservations - COALESCE(reservation_totals.total_guests, 0)) as available_spots"
+    //     )
+    //   )
+    //   // Join reviews
+    //   .leftJoin(
+    //     knex("review").select("meal_id").groupBy("meal_id").as("review_totals"),
+    //     "meal.id",
+    //     "review_totals.meal_id"
+    //   )
+    //   // Join reservations with totals
+    //   .leftJoin(
+    //     knex("reservation")
+    //       .select("meal_id")
+    //       .sum("number_of_guests as total_guests")
+    //       .groupBy("meal_id")
+    //       .as("reservation_totals"),
+    //     "meal.id",
+    //     "reservation_totals.meal_id"
+    //   );
+    let query = knex("meal")
+      .select(
+        "meal.*",
+        knex.raw(
+          "ROUND(COALESCE(avg_reviews.avg_stars, 0), 1) as average_stars"
+        ),
+        knex.raw(
+          "(meal.max_reservations - COALESCE(reservation_totals.total_guests, 0)) as available_spots"
+        )
+      )
+      .leftJoin(
+        knex("review")
+          .select("meal_id")
+          .avg("stars as avg_stars")
+          .groupBy("meal_id")
+          .as("avg_reviews"),
+        "meal.id",
+        "avg_reviews.meal_id"
+      )
+      .leftJoin(
+        knex("reservation")
+          .select("meal_id")
+          .sum("number_of_guests as total_guests")
+          .groupBy("meal_id")
+          .as("reservation_totals"),
+        "meal.id",
+        "reservation_totals.meal_id"
+      );
+    // Filter by title
+    if (req.query.title) {
+      query = query.where("title", "like", `%${req.query.title}%`);
+    }
 
-    if (!isNaN(maxPrice)) {
-      query.where("price", "<", maxPrice);
-    }
-    if (!isNaN(availableReservations)) {
-      //might be returned as a string, hence checking explicitly
-      query
-        .leftJoin("reservation", "meal.id", "=", "reservation.meal_id")
-        .select("meal.id", "meal.max_reservations", "meal.title")
-        .sum("reservation.number_of_guests as sum_of_guests")
-        .groupBy("meal.id", "meal.max_reservations", "meal.title")
-        .havingRaw(
-          availableReservations === "true"
-            ? "SUM(reservation.number_of_guests) < meal.max_reservations"
-            : "SUM(reservation.number_of_guests) >= meal.max_reservations"
-        ); //to make it refer to a column and not consider as a string using knex.ref() here
+    // Filter by available reservations
+    if (req.query.availableReservations === "true") {
+      query = query.whereRaw(
+        "(meal.max_reservations - COALESCE(reservation_totals.total_guests, 0)) > 0"
+      );
     }
 
-    if (title !== undefined) {
-      query.where("title", "like", `%${title}%`); //performing a partial match here
-    }
-    if (dateAfter !== undefined) {
-      query.where("when", ">", dateAfter);
-    }
-    if (dateBefore !== undefined) {
-      query.where("when", "<", dateBefore);
-    }
-    if (limit !== undefined) {
-      query.limit(limit);
-    }
-    if (sortKey !== undefined) {
-      if (sortKey == "price") {
-        query.orderBy("price", sortDir !== undefined ? sortDir : "asc");
+    // Sort results
+    if (req.query.sortKey) {
+      const { sortKey, sortDir } = req.query;
+      const allowedKeysToSort = [
+        "scheduled_at",
+        "max_reservations",
+        "price",
+        "average_stars",
+      ];
+
+      if (allowedKeysToSort.includes(sortKey)) {
+        query = query.orderBy(sortKey, sortDir === "desc" ? "desc" : "asc");
       }
-      if (sortKey == "max_reservations") {
-        query.orderBy(
-          "max_reservations",
-          sortDir !== undefined ? sortDir : "asc"
-        );
-      }
     }
 
-    const meals = await query;
-    res.json(meals);
+    // Execute the query
+    const mealsSummary = await query;
+
+    // Format the response
+    const formattedMealSummaries = mealsSummary.map((meal) => ({
+      ...meal,
+      available_spots: parseInt(meal.available_spots, 10),
+      average_stars: parseFloat(meal.average_stars),
+    }));
+
+    res.json(formattedMealSummaries);
   } catch (error) {
     next(error);
   }
@@ -78,20 +174,6 @@ mealsRouter.post("/", async (req, res, next) => {
 });
 
 //GET meals by id
-// mealsRouter.get("/:id", async (req, res, next) => {
-//   try {
-//     const { id } = req.params;
-//     const meal = await knex("meal").where({ id }).first();
-//     if (!meal) {
-//       res.json({ message: "Meal not found" });
-//     } else {
-//       res.json(meal);
-//     }
-//   } catch (error) {
-//     next(error);
-//   }
-// });
-
 mealsRouter.get("/:id", async (req, res, next) => {
   try {
     const { id } = req.params;
