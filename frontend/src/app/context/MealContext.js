@@ -10,7 +10,7 @@ export const MealProvider = ({ children }) => {
   const fetchMeals = async () => {
     setLoading(true);
     try {
-      const apiResponse = await fetch("http://localhost:3001/api/meals");
+      const apiResponse = await fetch("https://meal-sharing-backend-huuy.onrender.com/api/meals");
       const mealData = await apiResponse.json();
       if (apiResponse.ok) {
         setMeals(mealData);
