@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 const fetchMealsDetails = async (mealID) => {
   try {
     const apiResponse = await fetch(
-      `http://localhost:3001/api/meals/${mealID}`
+      `https://meal-sharing-backend-huuy.onrender.com/api/meals/${mealID}`
     );
     const data = await apiResponse.json();
     return data;
@@ -21,7 +21,7 @@ const fetchMealsDetails = async (mealID) => {
 const fetchMealReviews = async (mealID) => {
   try {
     const apiResponse = await fetch(
-      `http://localhost:3001/api/reviews/${mealID}`
+      `https://meal-sharing-backend-huuy.onrender.com/api/reviews/${mealID}`
     );
     const data = await apiResponse.json();
     return data;
@@ -84,7 +84,7 @@ export default function MealInfo() {
   
   const handleReviewSubmit = async (newReview) => {
     try {
-      const response = await fetch(`http://localhost:3001/api/reviews/`, {
+      const response = await fetch(`https://meal-sharing-backend-huuy.onrender.com/api/reviews/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
