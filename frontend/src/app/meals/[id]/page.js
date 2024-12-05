@@ -81,57 +81,7 @@ export default function MealInfo() {
       setError("An error occurred while fetching data.");
     }
   };
-  // Function to handle review submission
-  // const handleReviewSubmit = async (newReview) => {
-  //   try {
-  //     // Post the new review to the API
-  //     const response = await fetch(`http://localhost:3001/api/reviews/`, {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify(newReview),
-  //     });
-  //     const result = await response.json();
-  //     if (response.ok) {
-  //       // Trigger review refetch after submission
-  //       const updatedReviews = await fetchMealReviews(mealId);
-  //       setReviewDetails(updatedReviews); // Update state with the new reviews
-  //     } else {
-  //       setError(result.message || "Failed to submit review.");
-  //     }
-  //   } catch (error) {
-  //     setError("An error occurred while submitting the review.");
-  //     console.error(error);
-  //   }
-  // };
-  // const handleReviewSubmit = async (newReview) => {
-  //   try {
-  //     const response = await fetch(`http://localhost:3001/api/reviews/`, {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify(newReview),
-  //     });
-  //     const result = await response.json();
-
-  //     if (response.ok) {
-  //       // Trigger review refetch after successful submission
-  //       const updatedReviews = await fetchMealReviews(mealId);
-  //       setReviewDetails(updatedReviews);
-  //     } else {
-  //       if (result.errors) {
-  //         // Pass Joi validation errors back to the caller
-  //         throw new Error(JSON.stringify(result.errors));
-  //       }
-  //       setError(result.message || "Failed to submit review.");
-  //     }
-  //   } catch (error) {
-  //     // Capture validation or submission error
-  //     throw error;
-  //   }
-  // };
+  
   const handleReviewSubmit = async (newReview) => {
     try {
       const response = await fetch(`http://localhost:3001/api/reviews/`, {
