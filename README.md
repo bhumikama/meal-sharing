@@ -4,9 +4,9 @@ Meal Sharing is a web application that allows users to share meals and book rese
 
 ## Features
 
-- **Meal Discovery**: Users can browse available meals to join, with filtering options based on preferences, location, and meal types.
+- **Meal Discovery**: Users can browse available meals to join, with filtering and sorting options.
 - **Booking & Reservations**: Users can book a spot for a meal they wish to join.
-- **Responsive Design**: The app is fully responsive, providing a seamless experience across different devices (desktop, tablet, mobile).
+
 
 ## Tech Stack
 
